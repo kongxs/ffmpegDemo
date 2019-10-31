@@ -890,7 +890,7 @@ typedef struct AVStream {
      * @deprecated use the codecpar struct instead
      */
     attribute_deprecated
-    AVCodecContext *codec;
+    AVCodecParameters *codec;
 #endif
     void *priv_data;
 

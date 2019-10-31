@@ -3,11 +3,13 @@ package com.example.ffmpegdemo;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.widget.TextView;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback {
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
+    private File file;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,14 +38,30 @@ public class MainActivity extends AppCompatActivity {
 
         File externalStorageDirectory = Environment.getExternalStorageDirectory();
 
-        File file = new File(externalStorageDirectory,"1111.mp4");
-//        File file = new File(externalStorageDirectory,"wwise_cfg.txt");
+        file = new File(externalStorageDirectory,"1111.mp4");
 
-        if (file.exists()) {
-            tv.setText(getDuration(file.getAbsolutePath()));
-        } else {
-            tv.setText("file not exits ... ");
-        }
+        File outfile = new File(externalStorageDirectory, "1111_out.mp4");
+
+        decodeAudio(file.getAbsolutePath() , outfile.getAbsolutePath() , "v");
+
+    }
+
+    @Override
+    public void surfaceCreated(final SurfaceHolder holder) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+            }
+        }).start();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
 
     }
 
@@ -52,10 +72,17 @@ public class MainActivity extends AppCompatActivity {
     public native String stringFromJNI();
 
 
-    public native int stringFromJNI2();
-
-
     public native String getDuration(String path);
 
+
+    //提取音视频
+
+    /**
+     *
+     * @param filename
+     * @param outfilename
+     * @param type  v: video . a: audio
+     */
+    public native void decodeAudio(String filename,String outfilename , String type);
 
 }

@@ -2,7 +2,7 @@
 // Created by 孔祥书 on 2019-10-28.
 //
 
-//#include <jni.h>
+#include <jni.h>
 
 //#include <jni.h>
 //
@@ -14,6 +14,9 @@
 
 
 #include <stdio.h>
+
+#include <string.h>
+#include <android/log.h>
 
 int main() {
 
