@@ -1,5 +1,5 @@
-#include <jni.h>
 
+#include <jni.h>
 #include <string>
 #include <android/log.h>
 
@@ -31,6 +31,8 @@ extern "C"
     #include <libavcodec/avcodec.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
+#include "ffmpeg/ffmpeg.h"
+#include <libavcodec/jni.h>
 
 #include <libavutil/frame.h>
 #include <libavutil/mem.h>
@@ -334,5 +336,30 @@ Java_com_example_ffmpegdemo_MainActivity_decodeAudio(JNIEnv *env, jobject instan
     avformat_close_input(&fmt_ctx);
     avio_close(ofmt_ctx->pb);
 
+
+}extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_coder_ffmpeg_jni_FFMpeg_run(JNIEnv *env, jclass type, jint cmdLen, jobjectArray cmd) {
+
+
+    //set java vm
+    JavaVM *jvm = NULL;
+    env->GetJavaVM(&jvm);
+    av_jni_set_java_vm(jvm, NULL);
+//
+    char *argCmd[cmdLen] ;
+    jstring buf[cmdLen];
+
+    for (int i = 0; i < cmdLen; ++i) {
+        buf[i] = static_cast<jstring>(env->GetObjectArrayElement(cmd, i));
+        char *string = const_cast<char *>(env->GetStringUTFChars(buf[i], JNI_FALSE));
+        argCmd[i] = string;
+        LOGE("argCmd=%s",argCmd[i]);
+    }
+
+    int retCode = ffmpegmain(cmdLen, argCmd);
+    LOGE("ffmpeg-invoke: retCode=%s",av_err2str(retCode));
+
+    return env->NewStringUTF(av_err2str(retCode));
 
 }

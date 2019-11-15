@@ -23,6 +23,18 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
         src/main/cpp/native-lib.cpp
         src/main/cpp/Utils.c
+
+
+#        src/main/cpp/ffmpeg-invoke.cpp
+##
+        src/main/cpp/ffmpeg/cmdutils.c
+        src/main/cpp/ffmpeg/cmdutils.c
+        src/main/cpp/ffmpeg/ffmpeg.c
+#        src/main/cpp/ffmpeg/ffmpeg.h
+        src/main/cpp/ffmpeg/ffmpeg_filter.c
+        src/main/cpp/ffmpeg/ffmpeg_opt.c
+#        src/main/cpp/ffmpeg/cmdutils_common_opts.h
+#        src/main/cpp/ffmpeg/config.h
         )
 
 include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp)

@@ -6,24 +6,15 @@ import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.coder.ffmpeg.jni.FFMpeg;
 
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback {
 
-    // Used to load the 'native-lib' library on application startup.
-    static {
-        System.loadLibrary("avcodec-57");
-        System.loadLibrary("avfilter-6");
-        System.loadLibrary("avdevice-57");
-        System.loadLibrary("avformat-57");
-        System.loadLibrary("avutil-55");
-        System.loadLibrary("postproc-54");
-        System.loadLibrary("swresample-2");
-        System.loadLibrary("swscale-4");
 
-        System.loadLibrary("native-lib");
-    }
 
     private File file;
 
@@ -32,17 +23,39 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Example of a call to a native method
-        TextView tv = findViewById(R.id.sample_text);
-
 
         File externalStorageDirectory = Environment.getExternalStorageDirectory();
 
         file = new File(externalStorageDirectory,"1111.mp4");
 
-        File outfile = new File(externalStorageDirectory, "1111_out.mp4");
 
-        decodeAudio(file.getAbsolutePath() , outfile.getAbsolutePath() , "v");
+        File outfile = new File(externalStorageDirectory, "1111_cmd.mp4");
+
+        if (outfile.exists()) {
+            outfile.delete();
+        }
+
+
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("ffmpeg -i ");
+//        builder.append(file.getAbsoluteFile());
+//        builder.append(" -vn ");
+//        builder.append(outfile.getAbsoluteFile());
+
+//
+        String command = "ffmpeg -d -ss 00:00:05 -t 00:00:5 -i %s -vcodec copy -acodec copy %s";
+
+
+        String result = String.format(command, file.getAbsoluteFile(), outfile.getAbsoluteFile());
+
+        Toast.makeText(this , result, Toast.LENGTH_LONG).show();
+
+        String s = FFMpeg.runCmd(result.split(" "));
+
+        Toast.makeText(this , "s = " + s, Toast.LENGTH_LONG).show();
+
+
+//        decodeAudio(file.getAbsolutePath() , outfile.getAbsolutePath() , "v");
 
     }
 
